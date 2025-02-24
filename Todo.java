@@ -20,7 +20,7 @@ class TaskList {
     private Task head;
 
     // Created method to add new task.
-    public void addTask(String description) {
+    public void addTask (String description) {
         Task newTask = new Task(description);
 
         if (head == null) {
@@ -65,5 +65,75 @@ class TaskList {
             System.out.println("- " + temp.description + " [" + (temp.isComplete ? "Completed" : "Pending") + "]");
             temp = temp.next;
         }
+    }
+}
+
+// Created class for user.
+class User {
+    String name;
+    TaskList taskList;
+
+    public User(String name) {
+        this.name = name;
+        this.taskList = new TaskList();
+    }
+}
+
+// Created main class for users and their todo lists.
+public class Todo {
+    private static final int MAX_USERS = 10;
+    private static User[] users = new User[MAX_USERS];
+    private static int userCount = 0;
+
+    // Created method to add a new user.
+    public static boolean addUser (String name) {
+        if (userCount >= MAX_USERS) {
+            System.out.println("User limit reached.");
+            return false;
+        }
+
+        users[userCount++] = new User(name);
+        return true;
+    }
+
+    // Created method to get user by username.
+    public static User getUser (String name) {
+        for (int i = 0; i < userCount; i++) {
+            if (users[i].name.equals(name)) {
+                return users[i];
+            }
+        }
+
+        return null;
+    }
+
+    // Created users and their todo lists.
+    public static void main (String[] args) {
+        addUser("John");
+        addUser("Jane");
+
+        User john = getUser("John");
+        if (john != null) {
+            john.taskList.addTask("Grocery shop.");
+            john.taskList.addTask("Take out trash.");
+        }
+
+        User jane = getUser ("Jane");
+        if (jane != null) {
+            jane.taskList.addTask("Make doctor appointment.");
+            jane.taskList.addTask("Pick up mail.");
+        }
+
+        // Marking a task as completed.
+        if (john != null) john.taskList.markTaskCompleted("Grocery shop.");
+
+        if (jane != null) jane.taskList.markTaskCompleted("Pick up mail.");
+
+        // Prints out users todo lists.
+        System.out.println("John's Todo List:");
+        if (john != null) john.taskList.printTasks();
+
+        System.out.println("Jane's Todo List:");
+        if (jane != null) jane.taskList.printTasks();
     }
 }
